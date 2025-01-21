@@ -26,6 +26,7 @@ import {
   clampValue,
   getUpdatedNodePosition,
   shouldBlockEvent,
+  shouldBlockPanEvent,
 } from "./helpers/utils";
 
 import styles from "./App.module.css";
@@ -228,6 +229,11 @@ const ReactInfiniteCanvasRenderer = memo(
               type: string;
               transform: any;
             }) => {
+              // @ts-ignore
+              const nativeTarget = event.sourceEvent?.target;
+              if (nativeTarget && shouldBlockPanEvent({ target: nativeTarget }))
+                return;
+
               if (
                 event.sourceEvent?.ctrlKey === false &&
                 event.type === "zoom"

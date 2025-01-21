@@ -291,17 +291,19 @@ export const onScrollHandler = ({
 
 export const getBlockClassName = (
   shouldBlockScroll: boolean,
-  shouldBlockZoom: boolean
+  shouldBlockZoom: boolean,
+  shouldBlockPan: boolean
 ) => {
-  let blockClassName = "";
-  if (shouldBlockScroll && shouldBlockZoom) {
-    blockClassName = `${BLOCK_EVENTS_CLASS.BLOCK_EVENTS}`;
-  } else if (shouldBlockScroll) {
-    blockClassName = `${BLOCK_EVENTS_CLASS.BLOCK_SCROLL_CLASS}`;
-  } else if (shouldBlockZoom) {
-    blockClassName = `${BLOCK_EVENTS_CLASS.BLOCK_ZOOM_CLASS}`;
+  if (shouldBlockScroll && shouldBlockZoom && shouldBlockPan) {
+    return `${BLOCK_EVENTS_CLASS.BLOCK_EVENTS}`;
   }
-  return blockClassName;
+  return [
+    shouldBlockScroll && `${BLOCK_EVENTS_CLASS.BLOCK_SCROLL_CLASS}`,
+    shouldBlockZoom && `${BLOCK_EVENTS_CLASS.BLOCK_ZOOM_CLASS}`,
+    shouldBlockPan && `${BLOCK_EVENTS_CLASS.BLOCK_PAN_CLASS}`,
+  ]
+    .filter(Boolean)
+    .join(" ");
 };
 
 export const shouldBlockEvent = (event: {
@@ -324,6 +326,14 @@ export const shouldBlockEvent = (event: {
     isCtrlKeyPressed &&
     target.closest(`.${BLOCK_EVENTS_CLASS.BLOCK_ZOOM_CLASS}`)
   ) {
+    return true;
+  }
+  return false;
+};
+
+export const shouldBlockPanEvent = (event: { target: HTMLElement }) => {
+  const target = event.target as HTMLElement;
+  if (target.closest(`.${BLOCK_EVENTS_CLASS.BLOCK_PAN_CLASS}`)) {
     return true;
   }
   return false;
