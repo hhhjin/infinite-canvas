@@ -333,7 +333,10 @@ export const shouldBlockEvent = (event: {
 
 export const shouldBlockPanEvent = (event: { target: HTMLElement }) => {
   const target = event.target as HTMLElement;
-  if (target.closest(`.${BLOCK_EVENTS_CLASS.BLOCK_PAN_CLASS}`)) {
+  if (
+    target.closest(`.${BLOCK_EVENTS_CLASS.BLOCK_EVENTS}`) ||
+    target.closest(`.${BLOCK_EVENTS_CLASS.BLOCK_PAN_CLASS}`)
+  ) {
     return true;
   }
   return false;
